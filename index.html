@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscripción Brigadas de Emergencia · CAH 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root {
+    --rojo:    #c0392b;
+    --rojo-s:  #e74c3c;
+    --naranja: #d35400;
+    --verde:   #1e8449;
+    --azul:    #1a5276;
+    --bg:      #f7f6f2;
+    --blanco:  #ffffff;
+    --gris1:   #f0eeea;
+    --gris2:   #dddbd5;
+    --gris3:   #9b9b8e;
+    --texto:   #1c1c1a;
+    --sombra:  0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--rojo);
+    color: white;
+    padding: 36px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '🚨';
+    position: absolute;
+    font-size: 200px;
+    opacity: 0.06;
+    top: -30px; right: -20px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero .inst {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    background: rgba(255,255,255,0.18);
+    border-radius: 4px;
+    padding: 3px 10px;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(22px, 5vw, 34px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    font-size: 14px;
+    opacity: 0.85;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* CONTENEDOR */
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 16px 60px; }
+
+  /* BRIGADAS GRID */
+  .brigadas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .brigada-card {
+    background: var(--blanco);
+    border: 2px solid var(--gris2);
+    border-radius: 12px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    position: relative;
+    user-select: none;
+  }
+  .brigada-card:hover:not(.llena) { border-color: var(--rojo); box-shadow: var(--sombra); }
+  .brigada-card.seleccionada {
+    border-color: var(--rojo);
+    background: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
+  }
+  .brigada-card.llena {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--gris1);
+  }
+
+  .brigada-icono { font-size: 28px; margin-bottom: 10px; display: block; }
+  .brigada-nombre {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .brigada-desc {
+    font-size: 12px;
+    color: var(--gris3);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .cupos-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .barra-bg {
+    flex: 1;
+    height: 5px;
+    background: var(--gris2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .barra-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: var(--verde);
+    transition: width 0.4s ease;
+  }
+  .barra-fill.medio { background: var(--naranja); }
+  .barra-fill.lleno { background: var(--rojo-s); }
+
+  .cupos-txt {
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--gris3);
+  }
+  .cupos-txt.lleno { color: var(--rojo-s); }
+
+  .check-icono {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--rojo);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+  }
+  .brigada-card.seleccionada .check-icono { display: flex; }
+
+  .badge-llena {
+    display: none;
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--rojo-s);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .brigada-card.llena .badge-llena { display: block; }
+
+  /* FORMULARIO INSCRIPCIÓN */
+  .form-card {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--sombra);
+    margin-bottom: 20px;
+  }
+  .form-card h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--texto);
+  }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gris3);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--gris2);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--texto);
+    background: var(--blanco);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239b9b8e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  select:focus { outline: none; border-color: var(--rojo); }
+
+  /* BRIGADA SELECCIONADA RESUMEN */
+  .resumen-brigada {
+    background: var(--gris1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--gris3);
+    margin-bottom: 16px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+  .resumen-brigada.visible { display: flex; }
+  .resumen-brigada strong { color: var(--texto); }
+
+  /* BOTÓN */
+  .btn-inscribir {
+    width: 100%;
+    padding: 14px;
+    background: var(--rojo);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-inscribir:hover:not(:disabled) { background: var(--rojo-s); transform: translateY(-1px); }
+  .btn-inscribir:disabled { background: var(--gris2); color: var(--gris3); cursor: not-allowed; transform: none; }
+
+  /* ESTADO */
+  .estado {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    display: none;
+    line-height: 1.4;
+  }
+  .estado.enviando { background: #eaf4fb; color: #1a5276; display: block; }
+  .estado.exito    { background: #eafaf1; color: #1e8449; display: block; }
+  .estado.error    { background: #fdedec; color: #c0392b; display: block; }
+  .estado.aviso    { background: #fef9e7; color: #9a7d0a; display: block; }
+
+  /* PANEL INSCRITOS */
+  .panel-inscritos {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--sombra);
+  }
+  .panel-inscritos h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .brigada-lista { margin-bottom: 20px; }
+  .brigada-lista h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gris3);
+    border-bottom: 1px solid var(--gris2);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brigada-lista h3 span.conteo {
+    margin-left: auto;
+    font-size: 11px;
+    background: var(--gris1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: var(--gris3);
+  }
+
+  .nombre-pill {
+    display: inline-block;
+    background: var(--gris1);
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 12px;
+    margin: 3px 4px 3px 0;
+    color: var(--texto);
+  }
+
+  .vacio-txt { font-size: 12px; color: var(--gris3); font-style: italic; }
+
+  .btn-refresh {
+    background: none;
+    border: 1.5px solid var(--gris2);
+    border-radius: 7px;
+    padding: 7px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gris3);
+    margin-bottom: 16px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-refresh:hover { border-color: var(--rojo); color: var(--rojo); }
+
+  @media (max-width: 500px) {
+    .hero { padding: 28px 16px 24px; }
+    .brigadas-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="inst">Colegio Carlos Albán Holguín I.E.D. · 2026</div>
+  <h1>Brigadas de Emergencia</h1>
+  <p>Selecciona la brigada en la que deseas participar. Cada brigada tiene cupos limitados.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- SELECTOR DE BRIGADA -->
+  <div class="brigadas-grid" id="brigadas-grid">
+
+    <div class="brigada-card" id="card-0" onclick="seleccionarBrigada(0)">
+      <span class="brigada-icono">🚪</span>
+      <div class="brigada-nombre">Brigada de Evacuación y Alarma</div>
+      <div class="brigada-desc">Guía a estudiantes y personal por las rutas seguras hacia los puntos de encuentro durante sismos, incendios o simulacros.</div>
+      <div class="cupos-bar">
+        <div class="barra-bg"><div class="barra-fill" id="barra-0"></div></div>
+        <span class="cupos-txt" id="cupos-txt-0">— / 13</span>
+      </div>
+      <div class="check-icono">✓</div>
+      <div class="badge-llena">Llena</div>
+    </div>
+
+    <div class="brigada-card" id="card-1" onclick="seleccionarBrigada(1)">
+      <span class="brigada-icono">🩺</span>
+      <div class="brigada-nombre">Brigada de Primeros Auxilios</div>
+      <div class="brigada-desc">Presta atención básica de emergencia y estabiliza a personas lesionadas o afectadas mientras llega el apoyo médico especializado.</div>
+      <div class="cupos-bar">
+        <div class="barra-bg"><div class="barra-fill" id="barra-1"></div></div>
+        <span class="cupos-txt" id="cupos-txt-1">— / 14</span>
+      </div>
+      <div class="check-icono">✓</div>
+      <div class="badge-llena">Llena</div>
+    </div>
+
+    <div class="brigada-card" id="card-2" onclick="seleccionarBrigada(2)">
+      <span class="brigada-icono">🧯</span>
+      <div class="brigada-nombre">Brigada de Prevención y Control de Incendios</div>
+      <div class="brigada-desc">Revisa el estado de los extintores, identifica fuentes de riesgo eléctrico o de fuego y actúa de forma inicial ante conatos de incendio.</div>
+      <div class="cupos-bar">
+        <div class="barra-bg"><div class="barra-fill" id="barra-2"></div></div>
+        <span class="cupos-txt" id="cupos-txt-2">— / 13</span>
+      </div>
+      <div class="check-icono">✓</div>
+      <div class="badge-llena">Llena</div>
+    </div>
+
+    <div class="brigada-card" id="card-3" onclick="seleccionarBrigada(3)">
+      <span class="brigada-icono">🔍</span>
+      <div class="brigada-nombre">Brigada de Búsqueda y Rescate</div>
+      <div class="brigada-desc">Apoya en la ubicación y verificación de espacios escolares para asegurar que no queden personas atrapadas en zonas de peligro.</div>
+      <div class="cupos-bar">
+        <div class="barra-bg"><div class="barra-fill" id="barra-3"></div></div>
+        <span class="cupos-txt" id="cupos-txt-3">— / 13</span>
+      </div>
+      <div class="check-icono">✓</div>
+      <div class="badge-llena">Llena</div>
+    </div>
+
+  </div>
+
+  <!-- FORMULARIO -->
+  <div class="form-card">
+    <h2>Inscripción</h2>
+
+    <div class="field">
+      <label>Tu nombre</label>
+      <select id="sel-nombre">
+        <option value="">— Selecciona tu nombre —</option>
+        <option>SANDRA MARÍA PLAZAS CORONADO</option>
+        <option>MAGDA MARCELA GAVILÁN MURCIA</option>
+        <option>ÁNGELA YURANI GUTIÉRREZ MÉNDEZ</option>
+        <option>JOSÉ NODIER LIÉVANO ORTÍZ</option>
+        <option>MARÍA JIMENA POLANCO GIRALDO</option>
+        <option>LILI INELDA HILARIÓN CÁRDENAS</option>
+        <option>SOFÍA ORTÍZ</option>
+        <option>SILVIA STELLA AVELLANEDA MARÍN</option>
+        <option>JESÚS EMILIO ARIAS CRUZ</option>
+        <option>JHON EDINSON PABÓN GÓMEZ</option>
+        <option>MIGUEL ANTONIO CADENA PINZÓN</option>
+        <option>ODILIA ALBARRACÍN</option>
+        <option>JUAN ANDRÉS JULIO</option>
+        <option>MIGUEL DURÁN</option>
+        <option>ASTRID HERNÁNDEZ</option>
+        <option>YANIR TORRES BENÍTEZ</option>
+        <option>ESTHER QUIROGA</option>
+        <option>JAIRO ANTONIO SAAVEDRA MARTÍNEZ</option>
+        <option>JUAN CARLOS PIÑEROS SUÁREZ</option>
+        <option>NURY JANETH DÍAZ SUÁREZ</option>
+        <option>ERIKA ALEXANDRA ZAMBRANO CALDERÓN</option>
+        <option>HENRY HUMBERTO BENAVIDES REVELO</option>
+        <option>DICK JIMÉNEZ</option>
+        <option>HERNÁN HUMBERTO DÍAZ PARDO</option>
+        <option>RAFAEL ANTONIO HERRERA TIBABISCO</option>
+        <option>JENNY YURANI ROJAS ROJAS</option>
+        <option>ANDRÉS FELIPE DÍAZ BARÓN</option>
+        <option>GILBERTO CEBALLOS</option>
+        <option>JESÚS ANTONIO MEDELLÍN</option>
+        <option>YULI MARCELA MARÍN PEÑA</option>
+        <option>ÉDER JULIÁN VIDES PARADA</option>
+        <option>CRISTIAN BEJARANO</option>
+        <option>MIDIAN BARRERO</option>
+        <option>GERMÁN ARIEL REINA BOGOTÁ</option>
+        <option>NORBERTO MORA CELEITA</option>
+        <option>ARMANDO CADENA</option>
+        <option>ADRIANA ANGARITA</option>
+        <option>DIANA GALVIS</option>
+        <option>MARÍA DEL PILAR ROMERO</option>
+        <option>LAURA VÁSQUEZ</option>
+        <option>ADRIANA ZÁRATE</option>
+        <option>WILLIAM PUENTES PERDOMO</option>
+        <option>FLOREZ PEREZ ESTELA MARIA</option>
+        <option>DUARTE AREVALO JULIA EDITH</option>
+        <option>ARMERO CANO GLORIA CRISTINA</option>
+        <option>DOMINGUEZ CENTENO FRANCIA STELLA</option>
+        <option>BELTRAN SARMIENTO LILIA VIVIANA</option>
+        <option>LARA VERA CARLOS EDUARDO</option>
+        <option>WILSON HERNANDO BENAVIDES REVELO</option>
+        <option>CANARIAS GOMEZ MONICA MARIA</option>
+        <option>JIMENEZ MOYANO YOLIMI MYERLE</option>
+        <option>PEÑA RAMIREZ INGRID PAOLA</option>
+        <option>OTALORA CICUA ADRIANA PILAR</option>
+      </select>
+    </div>
+
+    <div class="resumen-brigada" id="resumen-brigada">
+      <span id="resumen-icono">🚪</span>
+      <span>Brigada seleccionada: <strong id="resumen-nombre">—</strong></span>
+    </div>
+
+    <button class="btn-inscribir" id="btn-inscribir" onclick="inscribir()" disabled>
+      Inscribirme
+    </button>
+    <div class="estado" id="estado"></div>
+  </div>
+
+  <!-- PANEL INSCRITOS -->
+  <div class="panel-inscritos">
+    <h2>Integrantes por brigada</h2>
+    <button class="btn-refresh" onclick="cargarInscritos()">↻ Actualizar</button>
+
+    <div class="brigada-lista">
+      <h3>🚪 Evacuación y Alarma <span class="conteo" id="conteo-0">0 / 13</span></h3>
+      <div id="lista-0"><span class="vacio-txt">Sin inscritos aún</span></div>
+    </div>
+    <div class="brigada-lista">
+      <h3>🩺 Primeros Auxilios <span class="conteo" id="conteo-1">0 / 14</span></h3>
+      <div id="lista-1"><span class="vacio-txt">Sin inscritos aún</span></div>
+    </div>
+    <div class="brigada-lista">
+      <h3>🧯 Prevención y Control de Incendios <span class="conteo" id="conteo-2">0 / 13</span></h3>
+      <div id="lista-2"><span class="vacio-txt">Sin inscritos aún</span></div>
+    </div>
+    <div class="brigada-lista">
+      <h3>🔍 Búsqueda y Rescate <span class="conteo" id="conteo-3">0 / 13</span></h3>
+      <div id="lista-3"><span class="vacio-txt">Sin inscritos aún</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbytVx5xTVWhPPErouu_g-Mljjr_9VL-Mb2piTwIrftnQrfbsJ302KRmBgrPW2oTy2soiQ/exec";
+
+const BRIGADAS = [
+  { nombre: "Brigada de Evacuación y Alarma",            icono: "🚪", max: 13 },
+  { nombre: "Brigada de Primeros Auxilios",              icono: "🩺", max: 14 },
+  { nombre: "Brigada de Prevención y Control de Incendios", icono: "🧯", max: 13 },
+  { nombre: "Brigada de Búsqueda y Rescate",             icono: "🔍", max: 13 },
+];
+
+// Estado local de cupos (se actualiza al cargar)
+let cuposOcupados = [0, 0, 0, 0];
+let inscritos = [[], [], [], []]; // nombres por brigada
+let brigadaSeleccionada = -1;
+let yaInscrito = false;
+
+// ============================================================
+// SELECCIONAR BRIGADA
+// ============================================================
+function seleccionarBrigada(idx) {
+  const card = document.getElementById(`card-${idx}`);
+  if (card.classList.contains('llena')) return;
+
+  brigadaSeleccionada = idx;
+
+  document.querySelectorAll('.brigada-card').forEach((c, i) => {
+    c.classList.toggle('seleccionada', i === idx);
+  });
+
+  const resumen = document.getElementById('resumen-brigada');
+  document.getElementById('resumen-icono').textContent = BRIGADAS[idx].icono;
+  document.getElementById('resumen-nombre').textContent = BRIGADAS[idx].nombre;
+  resumen.classList.add('visible');
+
+  actualizarBoton();
+}
+
+// ============================================================
+// ACTUALIZAR ESTADO DEL BOTÓN
+// ============================================================
+function actualizarBoton() {
+  const nombre = document.getElementById('sel-nombre').value;
+  const btn = document.getElementById('btn-inscribir');
+  btn.disabled = !nombre || brigadaSeleccionada < 0 || yaInscrito;
+}
+
+document.getElementById('sel-nombre').addEventListener('change', actualizarBoton);
+
+// ============================================================
+// INSCRIBIR
+// ============================================================
+async function inscribir() {
+  const nombre = document.getElementById('sel-nombre').value;
+  if (!nombre || brigadaSeleccionada < 0) return;
+
+  const brigada = BRIGADAS[brigadaSeleccionada].nombre;
+  const estadoEl = document.getElementById('estado');
+  const btn = document.getElementById('btn-inscribir');
+
+  // Verificar si ya está inscrito en alguna brigada
+  for (let i = 0; i < inscritos.length; i++) {
+    if (inscritos[i].includes(nombre)) {
+      estadoEl.className = 'estado aviso';
+      estadoEl.textContent = `⚠️ Ya estás inscrito en la ${BRIGADAS[i].nombre}. Solo se permite una brigada por persona.`;
+      return;
+    }
+  }
+
+  // Verificar cupos
+  if (cuposOcupados[brigadaSeleccionada] >= BRIGADAS[brigadaSeleccionada].max) {
+    estadoEl.className = 'estado error';
+    estadoEl.textContent = '❌ Esta brigada ya no tiene cupos disponibles.';
+    return;
+  }
+
+  btn.disabled = true;
+  estadoEl.className = 'estado enviando';
+  estadoEl.textContent = '⏳ Registrando inscripción...';
+
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        nombre,
+        brigada
+      })
+    });
+
+    yaInscrito = true;
+    estadoEl.className = 'estado exito';
+    estadoEl.textContent = `✅ ¡Inscripción registrada! ${nombre} → ${brigada}`;
+
+    // Actualizar estado local inmediatamente
+    inscritos[brigadaSeleccionada].push(nombre);
+    cuposOcupados[brigadaSeleccionada]++;
+    actualizarUI();
+
+    // Bloquear el formulario
+    document.getElementById('sel-nombre').disabled = true;
+    document.querySelectorAll('.brigada-card').forEach(c => {
+      c.style.pointerEvents = 'none';
+      c.style.opacity = c.classList.contains('seleccionada') ? '1' : '0.4';
+    });
+    btn.textContent = '✅ Ya estás inscrito';
+
+  } catch (e) {
+    estadoEl.className = 'estado error';
+    estadoEl.textContent = '❌ Error al registrar. Revisa tu conexión e intenta de nuevo.';
+    btn.disabled = false;
+  }
+}
+
+// ============================================================
+// CARGAR INSCRITOS DESDE SHEETS (tiempo real via doGet)
+// ============================================================
+async function cargarInscritos() {
+  try {
+    const res = await fetch(SHEETS_URL, { method: 'GET' });
+    const data = await res.json();
+
+    // Reiniciar contadores
+    inscritos = [[], [], [], []];
+    cuposOcupados = [0, 0, 0, 0];
+
+    for (const [brigada, nombres] of Object.entries(data)) {
+      const idx = BRIGADAS.findIndex(b => b.nombre === brigada);
+      if (idx >= 0) {
+        inscritos[idx] = nombres;
+        cuposOcupados[idx] = nombres.length;
+      }
+    }
+  } catch(e) {
+    console.warn('No se pudo leer Sheets:', e);
+  }
+  actualizarUI();
+}
+
+// Polling cada 5 segundos para mantener tiempo real
+setInterval(cargarInscritos, 5000);
+
+// ============================================================
+// ACTUALIZAR UI DE CUPOS Y LISTAS
+// ============================================================
+function actualizarUI() {
+  BRIGADAS.forEach((b, i) => {
+    const ocupados = cuposOcupados[i];
+    const max = b.max;
+    const libres = max - ocupados;
+    const pct = (ocupados / max) * 100;
+
+    // Barra
+    const barra = document.getElementById(`barra-${i}`);
+    barra.style.width = pct + '%';
+    barra.className = 'barra-fill' + (pct >= 100 ? ' lleno' : pct >= 70 ? ' medio' : '');
+
+    // Texto cupos
+    const txt = document.getElementById(`cupos-txt-${i}`);
+    txt.textContent = libres > 0 ? `${libres} cupo${libres !== 1 ? 's' : ''} libre${libres !== 1 ? 's' : ''}` : 'Sin cupos';
+    txt.className = 'cupos-txt' + (libres === 0 ? ' lleno' : '');
+
+    // Card llena
+    const card = document.getElementById(`card-${i}`);
+    if (libres === 0) {
+      card.classList.add('llena');
+      card.classList.remove('seleccionada');
+      if (brigadaSeleccionada === i) brigadaSeleccionada = -1;
+    }
+
+    // Lista inscritos
+    const lista = document.getElementById(`lista-${i}`);
+    const conteo = document.getElementById(`conteo-${i}`);
+    conteo.textContent = `${ocupados} / ${max}`;
+
+    if (inscritos[i].length === 0) {
+      lista.innerHTML = '<span class="vacio-txt">Sin inscritos aún</span>';
+    } else {
+      lista.innerHTML = inscritos[i].map(n =>
+        `<span class="nombre-pill">${n}</span>`
+      ).join('');
+    }
+  });
+}
+
+// Inicializar: cargar datos reales desde Sheets al abrir
+cargarInscritos();
+</script>
+</body>
+</html>
