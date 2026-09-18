@@ -3,21 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05522a">
 <title>Inscripción Brigadas de Emergencia · CAH 2026</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
 
   :root {
-    --rojo:    #c0392b;
-    --rojo-s:  #e74c3c;
-    --naranja: #d35400;
-    --verde:   #1e8449;
-    --azul:    #1a5276;
+    /* Paleta tomada del escudo del colegio */
+    --verde:     #05522a;  /* verde del borde del escudo (primario) */
+    --verde-s:   #0d4729;  /* verde profundo (hover / degradado) */
+    --verde-t:   #e8f1ec;  /* tinte de verde para fondos suaves */
+    --indigo:    #281769;  /* azul índigo de la franja diagonal */
+    --indigo-t:  #ecebf6;  /* tinte de índigo */
+    --rojo:      #a9241a;  /* rojo del libro y la bandera */
+    --rojo-t:    #fbeceb;  /* tinte de rojo */
+    --dorado:    #bfb624;  /* amarillo de la bandera */
+    --dorado-l:  #e6dd4a;  /* dorado claro (sobre fondos verdes) */
+    --dorado-o:  #857b00;  /* dorado oscuro (barras / textos) */
+    --dorado-t:  #fbf8d9;  /* tinte de dorado */
     --bg:      #f7f6f2;
     --blanco:  #ffffff;
     --gris1:   #f0eeea;
     --gris2:   #dddbd5;
-    --gris3:   #9b9b8e;
+    --gris3:   #6b6b5f;
+    --borde-ui:#8f8f83;
     --texto:   #1c1c1a;
     --sombra:  0 2px 12px rgba(0,0,0,0.08);
   }
@@ -33,12 +42,19 @@
 
   /* HERO */
   .hero {
-    background: var(--rojo);
+    background: linear-gradient(160deg, var(--verde) 0%, var(--verde-s) 100%);
     color: white;
     padding: 36px 24px 32px;
     text-align: center;
     position: relative;
     overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--indigo) 0 33.34%, var(--dorado) 33.34% 66.67%, var(--rojo) 66.67% 100%);
   }
   .hero::before {
     content: '🚨';
@@ -49,12 +65,24 @@
     line-height: 1;
     pointer-events: none;
   }
+  .hero .escudo {
+    display: block;
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 14px;
+    padding: 6px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+    object-fit: contain;
+  }
   .hero .inst {
     display: inline-block;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    background: rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.25);
+    color: var(--dorado-l);
     border-radius: 4px;
     padding: 3px 10px;
     margin-bottom: 14px;
@@ -95,11 +123,11 @@
     position: relative;
     user-select: none;
   }
-  .brigada-card:hover:not(.llena) { border-color: var(--rojo); box-shadow: var(--sombra); }
+  .brigada-card:hover:not(.llena) { border-color: var(--verde); box-shadow: var(--sombra); }
   .brigada-card.seleccionada {
-    border-color: var(--rojo);
-    background: #fff5f5;
-    box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
+    border-color: var(--verde);
+    background: var(--verde-t);
+    box-shadow: 0 0 0 3px rgba(5,82,42,0.15);
   }
   .brigada-card.llena {
     opacity: 0.55;
@@ -114,6 +142,7 @@
     font-weight: 700;
     margin-bottom: 6px;
     line-height: 1.2;
+    color: var(--indigo);
   }
   .brigada-desc {
     font-size: 12px;
@@ -140,8 +169,8 @@
     background: var(--verde);
     transition: width 0.4s ease;
   }
-  .barra-fill.medio { background: var(--naranja); }
-  .barra-fill.lleno { background: var(--rojo-s); }
+  .barra-fill.medio { background: var(--dorado-o); }
+  .barra-fill.lleno { background: var(--rojo); }
 
   .cupos-txt {
     font-size: 11px;
@@ -149,14 +178,14 @@
     white-space: nowrap;
     color: var(--gris3);
   }
-  .cupos-txt.lleno { color: var(--rojo-s); }
+  .cupos-txt.lleno { color: var(--rojo); }
 
   .check-icono {
     position: absolute;
     top: 14px; right: 14px;
     width: 22px; height: 22px;
     border-radius: 50%;
-    background: var(--rojo);
+    background: var(--verde);
     display: none;
     align-items: center;
     justify-content: center;
@@ -169,7 +198,7 @@
     display: none;
     position: absolute;
     top: 12px; right: 12px;
-    background: var(--rojo-s);
+    background: var(--rojo);
     color: white;
     font-size: 10px;
     font-weight: 600;
@@ -191,7 +220,7 @@
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 16px;
-    color: var(--texto);
+    color: var(--indigo);
   }
 
   .field { margin-bottom: 16px; }
@@ -207,7 +236,7 @@
   select {
     width: 100%;
     padding: 11px 14px;
-    border: 1.5px solid var(--gris2);
+    border: 1.5px solid var(--borde-ui);
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -221,7 +250,7 @@
     cursor: pointer;
     transition: border-color 0.15s;
   }
-  select:focus { outline: none; border-color: var(--rojo); }
+  select:focus { outline: none; border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(40,23,105,0.18); }
 
   /* BRIGADA SELECCIONADA RESUMEN */
   .resumen-brigada {
@@ -242,7 +271,7 @@
   .btn-inscribir {
     width: 100%;
     padding: 14px;
-    background: var(--rojo);
+    background: var(--verde);
     color: white;
     border: none;
     border-radius: 8px;
@@ -252,7 +281,7 @@
     cursor: pointer;
     transition: background 0.15s, transform 0.1s;
   }
-  .btn-inscribir:hover:not(:disabled) { background: var(--rojo-s); transform: translateY(-1px); }
+  .btn-inscribir:hover:not(:disabled) { background: var(--verde-s); transform: translateY(-1px); }
   .btn-inscribir:disabled { background: var(--gris2); color: var(--gris3); cursor: not-allowed; transform: none; }
 
   /* ESTADO */
@@ -265,10 +294,10 @@
     display: none;
     line-height: 1.4;
   }
-  .estado.enviando { background: #eaf4fb; color: #1a5276; display: block; }
-  .estado.exito    { background: #eafaf1; color: #1e8449; display: block; }
-  .estado.error    { background: #fdedec; color: #c0392b; display: block; }
-  .estado.aviso    { background: #fef9e7; color: #9a7d0a; display: block; }
+  .estado.enviando { background: var(--indigo-t); color: var(--indigo); display: block; }
+  .estado.exito    { background: var(--verde-t); color: var(--verde); display: block; }
+  .estado.error    { background: var(--rojo-t); color: var(--rojo); display: block; }
+  .estado.aviso    { background: var(--dorado-t); color: #5c5500; display: block; }
 
   /* PANEL INSCRITOS */
   .panel-inscritos {
@@ -282,13 +311,14 @@
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 16px;
+    color: var(--indigo);
   }
 
   .brigada-lista { margin-bottom: 20px; }
   .brigada-lista h3 {
     font-size: 13px;
     font-weight: 600;
-    color: var(--gris3);
+    color: var(--indigo);
     border-bottom: 1px solid var(--gris2);
     padding-bottom: 6px;
     margin-bottom: 10px;
@@ -299,15 +329,15 @@
   .brigada-lista h3 span.conteo {
     margin-left: auto;
     font-size: 11px;
-    background: var(--gris1);
+    background: var(--verde-t);
     padding: 2px 8px;
     border-radius: 10px;
-    color: var(--gris3);
+    color: var(--verde);
   }
 
   .nombre-pill {
     display: inline-block;
-    background: var(--gris1);
+    background: var(--verde-t);
     border-radius: 5px;
     padding: 4px 10px;
     font-size: 12px;
@@ -330,10 +360,11 @@
     margin-bottom: 16px;
     transition: border-color 0.15s, color 0.15s;
   }
-  .btn-refresh:hover { border-color: var(--rojo); color: var(--rojo); }
+  .btn-refresh:hover { border-color: var(--verde); color: var(--verde); }
 
   @media (max-width: 500px) {
     .hero { padding: 28px 16px 24px; }
+    .hero .escudo { width: 80px; height: 80px; }
     .brigadas-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -341,6 +372,7 @@
 <body>
 
 <div class="hero">
+  <img class="escudo" alt="Escudo del Colegio Carlos Albán Holguín I.E.D." width="200" height="200" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQEBIQDxAVFRUXDw0PDxgYDxAWFRAWFRUWFhURGBUYHSglGBolGxUVITEhJSkrLi4uFx8zODMsNygtLisBCgoKDg0OGg8QFy0dHx8tLi0rLS0tLS0tLS0uLS0rLS4tLS0tLSstLS0vKy0rNS0tLS8tLS00LS0tKy03Ky0tK//AABEIAMgAyAMBIgACEQEDEQH/xAAcAAABBAMBAAAAAAAAAAAAAAAAAQUGBwMECAL/xABJEAACAQMBBAUHBwcLBQEAAAABAgMABBEFBhIhMQcTQVFhFCIycYGRoSNCYnSisbMVJCUzNVJyNENjZHOCkqOywdFEU5PD4fH/xAAaAQACAwEBAAAAAAAAAAAAAAAAAwEEBQIG/8QALREAAgEDAgUDBAEFAAAAAAAAAAECAwQRITESMkFRcQUzgRMiYZGxFBVC0eH/2gAMAwEAAhEDEQA/ALxooooA17m6jj3esdVywRd4gBmPIDPbWaq96cf2ag77uH7nqt9ndvNQscKsvXRDlHL52B9F/SH3VDeBU60YNJ9Toulqu9E6W7CbC3SvbN27wLpn+NB94FTjT9TguF3oJkkHejq33VIxNNZRuUUUUEhRRWKeZUUs7BQOZJAA9poAyUtQzWukrTbbKibrnHzIhv8Avf0R76rbaPpOvrrKQfm0Z4HdbekYeMmOHs99Q2kLnVjDdl6R3UbMyK6llxvqGBZM8sjsrPXKVrPJFIJYpHSTO8HVyHz25Pb7asDZ/pauosJexCdeXWJupKPEp6LfCoUkLhcwlpt5LuoqNaHtzp15gQ3Ch/8Atv5jg92Dz9maktdFgKKKKACiiigBKxyyqilmICgFmJOAAOZJqO7S7b2NgCJpd6THCJPOkJ8ccF9uKpfbTbe71IMjfJQcSsSnO93F3+efDlUN4FzqRhuzoqGZXVXQgqwDKRxDAjIIrLTVsoc2Fme+ztD/AJSU61IwKKKKACiiigCuOnE/mEX1uL/Q9UpVz9Oh/Mrf62v4b1TNLluZt7zrwJSIuDvLlT2EMVI9oodsAnwzSkkHDAqcA4KlTgjIODXJWjxpZQ72u1Goxfq76cDuMpYfbzW6Nv8AWB/17f8Ahtz/AOuo3RipyzpXFRdR9uNs9Vk9K/m8d0on+gCma7mkmO9PI8h+nI7Y95rHRRlkOtUe8hAMUtFIzAc6gXq2LRWWa2lRElkidI3/AFbtGyo/qJrFQdShKO6wIyA8xTnpe0F9a/ya7ljA5LvbyD+4+RTbRU5JjVlHZk2tOlXVU9NoZfFot0n/AAED4Vvr0xXvbaQH+/KKrqijiY1XVRdSf3PS5qLDzIrdPY7Y95qO6rtjqV0CJrx9081jCxLju8wAn2mmKvDSgHHioPhnvqcsP6irLZnpEA5e3xpJOR9Rr3mvMnI+o1yITbllnTWxpzp1j9Rs/wAJKeaY9iT+jLH6lafhLT5TjdQUUUUAFFFFAFY9Ox/NbUf1v/1vVOVb3Tw3yFmP6zIfdGf+aqGly3My9514Mc/on1Guj12btLyyt0uoEkxbW4UkYdfMHJxgj31zhcei38JrqnSRi3hH9DCPsipgNsuVlY6x0OLxayuivckq7w/8g4j3Gone9G+rxHhbLKO+OaI/Zcg1d+va7DZqhl3iXbciRELySNjJCqO4cailx0lxm9tLSGBz1rhJjIHieEk4HmEce/OcVDceLhzqWXbwlq4lTvsnqYODp9x/4s/dWe22I1aQ+bYS/wB5okH2yK6TqE7YbdDTry1t5Isxy7zSybxzGu9jIQAk45+PZXWELVpT7EE0vojv5T+cTRQDtA+Vf4YHxqfbPdG2n2hDmMzyjiHlO9g+CeiPdThpO19tcyiBRLG7KzRdbA8YlA57hPPHdwNSKog4yWYvKHRpRhssGG5gSRSkiKykYZWUMpHiDUB1/oms5iXtGa2c8cAb8ZP8BPD2EVYtJXZ04qSwzn/VujLVIM7kSTr3xuA3+B8H3ZqMXem3MJ+Wtpk796FwPfjFdT0lc8KK8rWm/wAHJokGcDOfUc042Gh3lwcQWkz93yTKvvOBXUVGKOBHCs4LqylNA6I7qUhr6QQpzKIQ8reBf0U9madelLQbax0qKK1iCL5bbk9rOd1xvMx4k1a1V903fs1Prdv9z1OEkP8ApxjBpLBR9I/I+qlpG5H1UsxludK7CH9GWP1O2/DFP1R/YA/oux+qW/8ApqQU03UFFFFBIUUUUAVR08n5OxH9NcH7C/8ANVIatfp5P8gH0rw/CP8A5qqDS5bmZec68GO49BvVXV1mMRxjujQfAVyjcDzT6sV1XdXCwwtI/oxxl278IM/7VMR1lyvyRbaT9q2OeXk1+U8GzHn4VHtu7OW8mhtrXHWwxzX5bdBZer/VoP4n+6nSylub+4gvZ4Vhjjgm6hRL1jv1+4d9uACeYBw41h2b120g8o1C7mCG5mZLVcMzvDB5ibqKCTk755dteehCN16p9WDyoRX71WDVb4aeH1Jns9qq3lrDcpykjVyP3W5MvsORVR6vtEG2g8oODDHILAZXO72NKPVIfdT9s3rkljb6gk0RiwJdQso29Lq55GCJjsPWY4dm/VbX1hJbb1reIY5CW5jhISch1fkedbV3FzpOGNJaPwxtjRhVm1KWHh489C39o+E2nMPSGpW6r6nDh/gTU7qrtJuJb/T7aaMqbi3nichjhXeA4Kk9m8DnPjUy2Y157rro5oepmhdElQSb64dd5GD4GcjwrJ9ClGnTdvKX3Rbyvx38Ca8WpbEgooor0AgKKK0dT1SC1jMtxKsajtZsZ8B3nwFAG9WpqOow20ZluJVjQc2ZsD/7Uc/Ld9e8NPg6qI8rm4UjI74rf0m9bYFbWnbIwpIJ7pnupxxEsvEIf6OMebH7B7aANX8v3l5w0233Iz/1M4Kpjvjh9KT1nAqIdKWzYhsBczzyXFx5Rbr1jtuqgJOVSIeag+PjVuVAumofos/Wbb76h7HM+VlF0jcvZS0jcvZSjDW50j0eH9FWX1WL7qkVRvo5P6KsvqyVJKcbqCiiigkKKKKAKg6e28/Tx4Xx/AqrTVn9PB+WsR/R3Z+MdVgaXLcy7z3PgQrnA+kg+Irqe+tRNBJCeTxvGfDIxXLcIy8Y/pYR9sV1aOVTHYsWXI/JVialJ+SUiXhcMw0wDtWUP1R9wBan/VtPSym0gw8CkvkGP345Im3s+ooG99Nmr6DeQ6uLq2tTPDg3ITr44lW4K9Uzktn5vHl2mpBpuj3Utyl5qBQNGri2hjLMkBYYdy5xvuRw5YFUrGxja8bX+Um/jovgvznxYI90nPCL3TWdC3VS9dckHgkHWRqC3eOsIP8AdNeumadvJrWMeg90N/uO4jMo9/3U5aPYpqEmpXEvGOYtp8PbiKIFHYeuQufZWPT9OXVNL8kuiRLDI1s7Di0csBwko78jB8Q1XpJuLSOqM1CpGTWUmmQjo51Hqbx4CfMnXfTwkjHH3r91WDsIOskv7rsku+pj8Vt1Eeffn3VXWpbBavAQ0EaStGwkikSVFOR87q37fDjVoWM1tpNjBHcyrGFjVTk5Z5DxfCjJYlieWazLaw+ncyuHu0l/39JFu/q051G6bynr4fVElpv1bV7e0j625mWNezePFj3AcyfAUw/lLUb3haQ+SQnlPOoaVh3pb9nrY+ytNYdOsZ1knaS4uNwSSXDq83VISQJCR5sSZDch2HurVM83PyvqF7wsYPJ4jyuLhfPYd8dvz9r49VbembI28UguJi1zcf8AdmO8V/gT0Yx6hUhUgjI9frr1QAUVpX2owwKzSOAFUO45lVJxvkDjjPbTXqd7LI1zZwnq5fJOutZAVO9nKngRgYbdHqcGgBy1XUoraPrZmwu8EGFZmZm4BAqgkknsqCdKWpR3OjtJESQLqBWBVlZGD8UZTxBFZNEu1u7J7UfrWxKqrLJNLbvvD5aaR8AMJMHdHYDgGmvpE06dNMuJrpkWSW7sZGjjLFAUAj4k+mTjJwByFQyJcrKnpDy9lLSGlGEtzo3o1P6Jsv7Afeak1RboxP6Js/7Ej7TVKacbqCiiigkKKKKAKZ6dj+c2Y/obg/aSqzqyOnQ/nlqP6tIft1W9LluZV37hmsRmaEf1i3H+YK6qFcsaUM3NuP61bfiCuqBUw2LVnyPyLRRTTrW0FrZqDcyhSeCKAWkkPcsa5JrstjhBAiDdRQoyxAAAAycngPGm3VdXs7EF53SPfO9gDz5W5cFAyx5CmnyrU739SnkMJ5SSKslxIPoxco/72T4VkOi22mwz3iRmadIZZGlkYvLIVBO7vt6I8BigDH5dqV9/J4/IoTyllVWncd6wck9bH2VrS2Vpp8Mt8iG6nR1SWWWbedW3ghy5BEYXPHdHAVr61MzeS/lGRWhzK8/UNMoVZFHUTMEO9gNvjPLJBrHs/YXrxuAqPBcgiZpi6tuo7RCXq8ZLSwCM8cYIyedQSY9S195DFK1wFTyd3h6uZ4IJriOQb6GWRfPHV4xwIPHFeNA0m8kSSSBUjSaBUCyhynUzb0gC445ieSUAHmrjlUjtrCK0hlMssl00cSPKHYMyrGCU3YvRXgDxxk95pl1PaxLiYQR3XVwi4hEs0Ui56uSImPLkHc+VG6fWO+gCW9YllZ5diy29soc4yzCOMdnecfGmGfaGWRlhkXyYyCW3b5aJpIXkTNvNlCcAkOMHtxTTo0ly4uFEBu4rhp7eVxIiRs8R6kzs/IB49zO6DxjOBW9c6TZWO/Pql0kitD5OA8SKXjBVvOCcZ38xeOOzlUpNvCAjtto019Ij+eCetDSKciMSZjuE48HQTR726eaynHKpfPaQW9pbtqk6hoInhZw5QSqV3GXvOQFOBxyKgOv9LYROo0qARoo3VdlXgPoxch7c+qq01PU57qQy3ErSOe1mzjwHcPAVcpWc5ay0AtLaDpbjjDRaZABlmYyuu6Cx5uI+0nnk+6qw1nWbm7kEl1M0jZ4ZPBePYBwHsrRry3Z61q3KhCFOWF0ZEloxxpDS0VhmD1Oh+iw/oiz/ALNx/mPUqqI9FB/RFr/DIP8AMapdTTdWwtFFFBIUUUUAUl05n8+tvqrfiGq7qwunE/n9v9U/9hqvaVLcyrv3Dc0QZu7X61bfiCujdb2itbMDr5MM36uNQWkkPcsY4mub9IhMlzbIHKFrm3UMvpJlxxHjXR2i7N21oS0UeZG/WSuxeWT+KRuPs5V1HYtWft/I19Zql96C+QQn5zBJLqQeC+jF7cmnPRdmbW0JkjQtK36yWRi8rnxc8vUMCnuiuy2FeHUEEEZBGD3EUw6vtVBBGGjZZiZepASaEAOFZyrO5CpwQ8zTZthrM6R2VxZsfPmI6tVEgnJidhCdzPapGQeB49lAGzLBaaUokghkd5WS3iUSswHpFIw0jbsaDj2gUz6vtmQ1rIBm3mt5hLGBvS7wkVH3GTOSoJOBwIB8K8W9tLd281ito/UySNLE8hCraEnfaMoeLlZQ3AcCDzxWyX0/SPlry4UzkysFSPcxvKiFI4E5DEacT681MU28JEmrsTaXizRyb/X25Sa1kdiA4RDvwPk/rEIPAjiOsIPKnO6j03S4k8rlTCLcxxKV4tDI+/1JjGesAwBk92arzaXpduZQY7FOoTkGOGkI8OGE+PrqvmM9y5clnYnLOzMePiTVj6CguKrLhR3CnObxFZZY+0fS5IV6rTYRAgG6rlVLY+jHjdX41Wt7fyzuZJpGdzxLMzEn307WmkIvF/PP2R7K27m0SQYZfV2Eeqkf3SlTliENO/U2KfolWUOJtJ9v9sjFFbt3pbpxXz1+0P8AmtEGtehdU6yzBmXXt6lF4nHDFry3+616ry9Mq8kvDEPYcaKQUtedMDqX/wBEbZ0i39cw/wAxqmVQnodbOkw/2lyP81qm1NRurYWiiigkKKKKAKN6bj+kIfqg/ENV/U/6bf2jF9UX8Q1AKVLcybr3GOOzQ/PrP63bf6xXUFcwbMfy+z+uW3+sVd21F4kN3HJdzyRwLbtJBuysiNNG2XjbHBiVwAD44413HYuWft/I46ztLHBEZIgspFwts/yyokUh4fKOc7g5dh500WW1HXo/lTpDDPazGF99dxGjd4ZsScN8HzHU9xputtk57mS6l3xDFO5DxtDxkjkCyByc+mjMccOYIJxWxreraNpjEyhJJ8o5jRd75QDHWiP0ImPaeB9ddxjKTwkWzFp2hTT9Ugtltwtl1E0pit5YrhkKGB1j+eMBzk4ID4yDW3canp2jwJFdTLJIsslwqJGoYSPvejGvCMeccZNVttP0qX11lID5PHywjZkYeMmOHsxUDdiTknJJyTnJJq9Ssm9ZsCw9p+lm8uMpaDyePlkENIw/ix5ns99V/mSZyfOdycsScknvJNb2zmiSX1wtvCV3ysrgMcB9wZ3M9maefJzA5t5IjDInpRkYI+kD88eIpV1df0ycKcNe5oen2lO4nwynj8dX4Gu20hQN6Y54ZI7B6++sk+5vc90buQN1hgDtHuNORGR8DWhOnEgJ2gDgxyO/OfE1hOvOrLM3lnpZWkKMEqcVj5yzEiAY8/5qkjdzvLyowoIw/LdHotkEYy3w+Newh57g5dzZPEDnnuPwofP7mcjj5jDvOPfRkVwtLb+RIgFIJfkCfRbewOJFZbmwjmG8PNPLOMHPiKxMO+PHE44Mcr688O2tq1iedhDblULrL1JbI69x/NRZ5uTwyeFdRU8pwepxUqUadOSrJY7a5b/GSPXUJjbcbB7Rg/7dlYX5VY232zgsdKsVeBI52uHNwVcuzt1Z5ufuHAdlVy/L2V6S3nKdB8Ty9f4PK1HGTbisIcBS0ich6qWsc869y9uhZs6Uo7ri5H28/wC9Tyq96EGzprjuvLgfBD/vVhUxbG5DlQUUUVJ0FFFFAFF9Nn7Sj+qJ+I9QGp902j9JRfVE/EeoDSpbmRde4xx2ccC+tCeXldtn/EKvDanpCsLLKO/Wyj+bj84gjvbkPv8ACue5kypHtHrrSBq5aUo1G03sXLKScGuxN9p+k2/vMojdREeG4h84jxk5n2YqEk0lFa8IRisRWC6FFFFMAmXRC4XV4MnGUuFHHGTuHhV57S7MW2oRhLhMkcY3BxJEe9W/25Vy2pwcg4IOVOcEH94VbGwXSsybttqbZXgqT44r3CQDmPp+/vrKu6EuJzWqDVPKGnabZm6005m+UgzhJ1GAO5ZE+YfHlTUDnl7K6LBjmj+a6Ov0WV1I9xFVntZ0asm9PpmMcWe3LcD3mJjyPgeFYtW1T1ib1j6y44hW1Xfr89yA14mmCDj2nCgDJY/ugdprNp9pcXM3k1tC7TA7sisrKIO8uTyH31ZWmbO2Whwi+vmMs28kfWCMsELnASKMcvXz+6k07aTeXojQvPV6dKOKT4pP9IiWnbKIixT6zIIFkfctbc7+ZXxkdaV9AcuHDnxIqztmtMkhgjkvxb9dGjqrJEqLBFz3AeXZxIxTXdaktmJL7VbiN0MryabH5OBLEp9FV4Bt4jGcjh2mql222+udSJT9Vb582MH0/Fz2nw5Vq0Ldy0gjylatOtLim8seel7bO2vzHbWuXWKVnaT5rHGMKO0eNVs/I+qlo3ckDvNaqpqjSlqKk1FZZvx8h6hS0CisMwW8vJdXQX+z5/r834UFWOKrnoM/Z8/1+b8GCrGFMWxt0+VeELRRRUnYUUUUAU907WBElpcgcCJbdz3Hg6e/z/dVX10jtxoIv7GW3+fgPCf3ZE4r7+Xtrm0qykq4KsrFHBGCrDgQaXJGdeQeVIK1LiPB3hy7fCtuipp1JQkpIrUqrpyyhvorYe1/dOPurGYH7gfbWvTvqcl92jNSN1Tkt8GOilKsOan768hhViNaEtpIdGUXs8i0tJS006JXsTt3c6YwUEy25bLxFuXeyH5h+Bq/tm9orbUIhNaybw5OvJ4z+6w7K5Vre0bV7izmE9rIUce0MP3WHIiqNe0T+6G/Ygvmx1qCyl1W5uWKp+UIYshSxJ6pAowONRvaXbeOymneK5a7klZHhhZcQWQwNxjkZ6wdwx41BNQ26u5UnjULH11z5RKVGW3t1E3VJ9AcM5HHjUXpFG1b1nogwbur6rPdyme5kMjntPJR3AcgPAVp15DZ5cfZWVYGPh8TVuVejSjhP9HEqsI7sxk//K2beHHE8/uFe4oAvZx+NZKzbi6dXRaIz7i541wx2ClNJW1pemyXc8drCPPkYIPoL89z4AZNVUVYRcpJIuroWszHpm+f525uJx6vNjH4dT2tTSrBLeCKCP0Y40jX1KMZrcpptpYWAooooJCiiigBCKqrpT2FaVmv7JN58ZuYwOMgH86v0gOY7fXVqmg0NZOZRUlhnJqtmvVXztZ0b2l8WlQmCY8S6DKufpR8j6xg1XOo9FuqRH5JI5x2FJVQn2SY++luLM2paST+3VEMop1utltRi/W2M47yI94e9M00yNuHdcFT2hgVI9hqMMS6M1vFhXl4weYpQaWgWm09DWe0/dOPiKwHIODwP304ivEiBhg//lWaN3Om98ot0rqUXiWqNGgHPLjWZLU5848PvrZVQBgCrVW/6QRYqXiWkdTVW2Y8zj4msq2qjx9ZrNRVCdac92Up3NSW7EApaKQmlidWes0lbWm6fPdNuWsDynODuKSB635Cp7s/0RXMmHvpRCvMxxkPIfAvyHszQotj4W05dMEAsLOa4lWC3jMkjeioH2ieQHiavbo82JTTYzJIQ9w4xK3Yg59Wvh49tPuz+z1rYR9XaxBAfSPN3Pezniadq7UcGhRoKmvyLRRRXQ8KKKKACiiigAooooAKKKKACte7s4pV3ZY1cdzKrD41sUUAQ7VejTSp8nyfqm/eiZk+z6PwqD630Q3EeWsrhZRzCSKEf1BxwPtAq6KKhpM4lTjLdZOV9RsZraTqrmJon7mGM/SB5Eeqtc11BrGkW95EYbmJZEPYR6J7weYPiKpDbvYCbTszQky22eJx58Hg3ePpe+uHHsUqtpjWH6IbRSFv/nbmpzsv0Y3l2BJcnyaI8RkZlceCfM9vuqEmytToym9EQZ3A5mnnR9ldQu8G3tHKnk7bsaY78vjPszV57P7DafZYMNuGftkk8+QnvBPAezFSaulAuws4rd5Kb0rodnbBu7tUHasSbzf42wB7jU00jo10u3w3Uda/70rM/wBj0fhUworpJIsxpxjssGOGJUUKihQBgAKAB6gKy0UVJ2FFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAVjkjDAqwBBBBBGQQew0UUARTQuj+wtLl7qOPLFt6IMcrb94jHr7ezsqX0UUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/Z">
   <div class="inst">Colegio Carlos Albán Holguín I.E.D. · 2026</div>
   <h1>Brigadas de Emergencia</h1>
   <p>Selecciona la brigada en la que deseas participar. Cada brigada tiene cupos limitados.</p>
